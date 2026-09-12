@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="리그 오브 레전드 챔피언 사용 현황을 한눈에 기록하는 체크리스트" />
+    <title>나의 챔피언 풀 | LoL Champion Tracker</title>
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero__brand">
+          <span class="eyebrow">CHAMPION COLLECTION</span>
+          <h1>나의 챔피언 풀</h1>
+          <p>플레이한 챔피언을 클릭해 나만의 기록을 완성하세요.</p>
+        </div>
+
+        <section class="progress-card" aria-label="전체 진행률">
+          <div class="progress-card__top">
+            <div>
+              <span class="progress-card__label">수집 진행도</span>
+              <strong><span id="usedCount">0</span><small> / <span id="totalCount">—</span></small></strong>
+            </div>
+            <span id="progressPercent" class="progress-card__percent">0%</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressBar"></span>
+          </div>
+          <p id="progressMessage">챔피언 명단을 불러오고 있어요.</p>
+        </section>
+      </header>
+
+      <main>
+        <section class="toolbar" aria-label="챔피언 목록 필터">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z" /></svg>
+            <label class="sr-only" for="searchInput">챔피언 검색</label>
+            <input id="searchInput" type="search" placeholder="챔피언 이름 검색" autocomplete="off" />
+            <kbd>/</kbd>
+          </div>
+
+          <div id="roleFilters" class="filter-row" aria-label="역할군 필터">
+            <button class="filter-chip is-active" type="button" data-role="all">전체</button>
+            <button class="filter-chip" type="button" data-role="Tank">탱커</button>
+            <button class="filter-chip" type="button" data-role="Fighter">전사</button>
+            <button class="filter-chip" type="button" data-role="Assassin">암살자</button>
+            <button class="filter-chip" type="button" data-role="Mage">마법사</button>
+            <button class="filter-chip" type="button" data-role="Marksman">원거리</button>
+            <button class="filter-chip" type="button" data-role="Support">서포터</button>
+          </div>
+
+          <div class="toolbar__bottom">
+            <div id="statusFilters" class="segmented" aria-label="사용 상태 필터">
+              <button class="is-active" type="button" data-status="all">모두</button>
+              <button type="button" data-status="unused">미사용</button>
+              <button type="button" data-status="used">사용 완료</button>
+            </div>
+            <div class="toolbar__actions">
+              <span id="resultCount" class="result-count"></span>
+              <button id="undoButton" class="text-button" type="button" disabled>실행 취소</button>
+              <button id="resetButton" class="text-button text-button--danger" type="button">전체 초기화</button>
+            </div>
+          </div>
+        </section>
+
+        <section aria-live="polite">
+          <div id="loadingState" class="state-card">
+            <span class="spinner" aria-hidden="true"></span>
+            <strong>챔피언을 불러오는 중...</strong>
+            <p>Riot Data Dragon에서 최신 명단을 확인하고 있습니다.</p>
+          </div>
+          <div id="errorState" class="state-card state-card--error" hidden>
+            <strong>챔피언 정보를 불러오지 못했어요.</strong>
+            <p>인터넷 연결을 확인한 뒤 다시 시도해 주세요.</p>
+            <button id="retryButton" type="button">다시 시도</button>
+          </div>
+          <div id="emptyState" class="state-card" hidden>
+            <strong>조건에 맞는 챔피언이 없어요.</strong>
+            <p>검색어나 필터를 바꿔보세요.</p>
+          </div>
+          <div id="championGrid" class="champion-grid" aria-label="챔피언 목록"></div>
+        </section>
+      </main>
+
+      <footer>
+        <span id="patchInfo">Data Dragon 연결 중</span>
+        <span>개인용 팬 프로젝트 · Riot Games와 제휴 또는 보증 관계가 없습니다.</span>
+      </footer>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
