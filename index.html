@@ -18,19 +18,49 @@
           <p>플레이한 챔피언을 클릭해 나만의 기록을 완성하세요.</p>
         </div>
 
-        <section class="progress-card" aria-label="전체 진행률">
-          <div class="progress-card__top">
-            <div>
-              <span class="progress-card__label">수집 진행도</span>
-              <strong><span id="usedCount">0</span><small> / <span id="totalCount">—</span></small></strong>
+        <div class="hero__dashboard">
+          <section class="progress-card" aria-label="전체 진행률">
+            <div class="progress-card__top">
+              <div>
+                <span class="progress-card__label">수집 진행도</span>
+                <strong><span id="usedCount">0</span><small> / <span id="totalCount">—</span></small></strong>
+              </div>
+              <span id="progressPercent" class="progress-card__percent">0%</span>
             </div>
-            <span id="progressPercent" class="progress-card__percent">0%</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <span id="progressBar"></span>
-          </div>
-          <p id="progressMessage">챔피언 명단을 불러오고 있어요.</p>
-        </section>
+            <div class="progress-track" aria-hidden="true">
+              <span id="progressBar"></span>
+            </div>
+            <p id="progressMessage">챔피언 명단을 불러오고 있어요.</p>
+          </section>
+
+          <section class="record-card" aria-label="현재 승패 기록">
+            <div class="record-card__summary">
+              <div>
+                <span class="record-card__label">현재 전적</span>
+                <strong><span id="winCount">0</span>승 <span id="lossCount">0</span>패</strong>
+              </div>
+              <div class="win-rate">
+                <span>승률</span>
+                <strong id="winRate">—</strong>
+              </div>
+            </div>
+            <div class="record-card__controls">
+              <div class="score-control score-control--win">
+                <span>승리</span>
+                <button type="button" data-record="win" data-delta="-1" aria-label="승리 1회 줄이기">−</button>
+                <strong id="winControlCount">0</strong>
+                <button type="button" data-record="win" data-delta="1" aria-label="승리 1회 추가">+</button>
+              </div>
+              <div class="score-control score-control--loss">
+                <span>패배</span>
+                <button type="button" data-record="loss" data-delta="-1" aria-label="패배 1회 줄이기">−</button>
+                <strong id="lossControlCount">0</strong>
+                <button type="button" data-record="loss" data-delta="1" aria-label="패배 1회 추가">+</button>
+              </div>
+              <button id="recordResetButton" class="record-reset" type="button">전적 초기화</button>
+            </div>
+          </section>
+        </div>
       </header>
 
       <main>

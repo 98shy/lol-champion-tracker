@@ -1,6 +1,7 @@
 const DDRAGON_ROOT = "https://ddragon.leagueoflegends.com";
 const FALLBACK_VERSION = "16.18.1";
 const STORAGE_KEY = "lol-champion-tracker:used-v1";
+const RECORD_STORAGE_KEY = "lol-champion-tracker:record-v1";
 
 const state = {
   champions: [],
@@ -10,6 +11,7 @@ const state = {
   role: "all",
   status: "all",
   history: [],
+  record: readStoredRecord(),
 };
 
 const ui = {
@@ -31,6 +33,13 @@ const ui = {
   reset: document.querySelector("#resetButton"),
   retry: document.querySelector("#retryButton"),
   toast: document.querySelector("#toast"),
+  winCount: document.querySelector("#winCount"),
+  lossCount: document.querySelector("#lossCount"),
+  winControlCount: document.querySelector("#winControlCount"),
+  lossControlCount: document.querySelector("#lossControlCount"),
+  winRate: document.querySelector("#winRate"),
+  recordControls: document.querySelector(".record-card__controls"),
+  recordReset: document.querySelector("#recordResetButton"),
 };
 
 let toastTimer;
@@ -46,6 +55,35 @@ function readStoredUsed() {
 
 function saveUsed() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.used]));
+}
+
+function readStoredRecord() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(RECORD_STORAGE_KEY));
+    return {
+      wins: Math.max(0, Number.parseInt(saved?.wins, 10) || 0),
+      losses: Math.max(0, Number.parseInt(saved?.losses, 10) || 0),
+    };
+  } catch {
+    return { wins: 0, losses: 0 };
+  }
+}
+
+function saveRecord() {
+  localStorage.setItem(RECORD_STORAGE_KEY, JSON.stringify(state.record));
+}
+
+function renderRecord() {
+  const { wins, losses } = state.record;
+  const games = wins + losses;
+  const rate = games ? `${Math.round((wins / games) * 100)}%` : "—";
+  ui.winCount.textContent = wins;
+  ui.lossCount.textContent = losses;
+  ui.winControlCount.textContent = wins;
+  ui.lossControlCount.textContent = losses;
+  ui.winRate.textContent = rate;
+  ui.recordControls.querySelector('[data-record="win"][data-delta="-1"]').disabled = wins === 0;
+  ui.recordControls.querySelector('[data-record="loss"][data-delta="-1"]').disabled = losses === 0;
 }
 
 async function getJSON(url) {
@@ -229,6 +267,25 @@ ui.reset.addEventListener("click", () => {
 
 ui.retry.addEventListener("click", loadChampions);
 
+ui.recordControls.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-record]");
+  if (!button) return;
+  const key = button.dataset.record === "win" ? "wins" : "losses";
+  const delta = Number(button.dataset.delta);
+  state.record[key] = Math.max(0, state.record[key] + delta);
+  saveRecord();
+  renderRecord();
+});
+
+ui.recordReset.addEventListener("click", () => {
+  if (state.record.wins + state.record.losses === 0) return showToast("초기화할 전적이 없습니다.");
+  if (!window.confirm("현재 승패 기록을 모두 초기화할까요?")) return;
+  state.record = { wins: 0, losses: 0 };
+  saveRecord();
+  renderRecord();
+  showToast("승패 기록을 초기화했습니다.");
+});
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "/" && document.activeElement !== ui.search) {
     event.preventDefault();
@@ -242,4 +299,5 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+renderRecord();
 loadChampions();
