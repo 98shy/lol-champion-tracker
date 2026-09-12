@@ -4,35 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="리그 오브 레전드 챔피언 사용 현황을 한눈에 기록하는 체크리스트" />
-    <title>나의 챔피언 풀 | LoL Champion Tracker</title>
+    <title>룽바람용 시트 | LoL Champion Tracker</title>
     <link rel="preconnect" href="https://ddragon.leagueoflegends.com" />
-    <link rel="stylesheet" href="styles.css?v=3" />
-    <script src="app.js?v=3" defer></script>
+    <link rel="stylesheet" href="styles.css?v=4" />
+    <script src="app.js?v=4" defer></script>
   </head>
   <body>
     <div class="app-shell">
       <header class="hero">
         <div class="hero__brand">
-          <span class="eyebrow">CHAMPION COLLECTION</span>
-          <h1>나의 챔피언 풀</h1>
-          <p>플레이한 챔피언을 클릭해 나만의 기록을 완성하세요.</p>
+          <span class="eyebrow">ARAM CHAMPION SHEET</span>
+          <h1>룽바람용 시트</h1>
+          <p>사용한 챔피언을 제외하고 현재 승패를 기록하세요.</p>
         </div>
 
         <div class="hero__dashboard">
-          <section class="progress-card" aria-label="전체 진행률">
-            <div class="progress-card__top">
-              <div>
-                <span class="progress-card__label">수집 진행도</span>
-                <strong><span id="usedCount">0</span><small> / <span id="totalCount">—</span></small></strong>
-              </div>
-              <span id="progressPercent" class="progress-card__percent">0%</span>
-            </div>
-            <div class="progress-track" aria-hidden="true">
-              <span id="progressBar"></span>
-            </div>
-            <p id="progressMessage">챔피언 명단을 불러오고 있어요.</p>
-          </section>
-
           <section class="record-card" aria-label="현재 승패 기록">
             <div class="record-card__summary">
               <div>

@@ -22,11 +22,6 @@ const ui = {
   search: document.querySelector("#searchInput"),
   roles: document.querySelector("#roleFilters"),
   statuses: document.querySelector("#statusFilters"),
-  usedCount: document.querySelector("#usedCount"),
-  totalCount: document.querySelector("#totalCount"),
-  progressPercent: document.querySelector("#progressPercent"),
-  progressBar: document.querySelector("#progressBar"),
-  progressMessage: document.querySelector("#progressMessage"),
   resultCount: document.querySelector("#resultCount"),
   patchInfo: document.querySelector("#patchInfo"),
   undo: document.querySelector("#undoButton"),
@@ -171,11 +166,10 @@ function createChampionButton(champion) {
 
   const shade = document.createElement("span");
   shade.className = "champion__shade";
-  const check = document.createElement("span");
-  check.className = "champion__check";
-  check.setAttribute("aria-hidden", "true");
-  check.textContent = "✓";
-  portrait.append(image, shade, check);
+  const ban = document.createElement("span");
+  ban.className = "champion__ban";
+  ban.setAttribute("aria-hidden", "true");
+  portrait.append(image, shade, ban);
   button.append(portrait);
   return button;
 }
@@ -188,23 +182,7 @@ function render() {
   ui.empty.hidden = filtered.length !== 0 || state.champions.length === 0;
   ui.grid.hidden = filtered.length === 0;
   ui.resultCount.textContent = `${filtered.length}명 표시 중`;
-  updateProgress();
-}
-
-function updateProgress() {
-  const used = state.used.size;
-  const total = state.champions.length;
-  const percent = total ? Math.round((used / total) * 100) : 0;
-  ui.usedCount.textContent = used;
-  ui.totalCount.textContent = total || "—";
-  ui.progressPercent.textContent = `${percent}%`;
-  ui.progressBar.style.width = `${percent}%`;
   ui.undo.disabled = state.history.length === 0;
-
-  if (!total) return;
-  if (used === 0) ui.progressMessage.textContent = "첫 챔피언을 선택해 여정을 시작하세요.";
-  else if (used === total) ui.progressMessage.textContent = "모든 챔피언을 플레이했습니다. 완벽해요!";
-  else ui.progressMessage.textContent = `앞으로 ${total - used}명의 챔피언이 남았습니다.`;
 }
 
 function toggleChampion(id) {
