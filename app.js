@@ -40,6 +40,7 @@ const ui = {
   winRate: document.querySelector("#winRate"),
   recordControls: document.querySelector(".record-card__controls"),
   recordReset: document.querySelector("#recordResetButton"),
+  championTooltip: document.querySelector("#championTooltip"),
 };
 
 let toastTimer;
@@ -54,7 +55,11 @@ function readStoredUsed() {
 }
 
 function saveUsed() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.used]));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.used]));
+  } catch {
+    // 저장소가 차단된 브라우저에서도 화면 조작은 계속 동작합니다.
+  }
 }
 
 function readStoredRecord() {
@@ -70,7 +75,11 @@ function readStoredRecord() {
 }
 
 function saveRecord() {
-  localStorage.setItem(RECORD_STORAGE_KEY, JSON.stringify(state.record));
+  try {
+    localStorage.setItem(RECORD_STORAGE_KEY, JSON.stringify(state.record));
+  } catch {
+    // 저장소가 차단된 브라우저에서도 전적 조작은 계속 동작합니다.
+  }
 }
 
 function renderRecord() {
@@ -148,6 +157,7 @@ function createChampionButton(champion) {
   button.type = "button";
   button.className = `champion${isUsed ? " is-used" : ""}`;
   button.dataset.championId = champion.id;
+  button.dataset.championName = champion.name;
   button.setAttribute("aria-pressed", String(isUsed));
   button.setAttribute("aria-label", `${champion.name}, ${isUsed ? "사용 완료" : "미사용"}`);
 
@@ -165,12 +175,8 @@ function createChampionButton(champion) {
   check.className = "champion__check";
   check.setAttribute("aria-hidden", "true");
   check.textContent = "✓";
-  const name = document.createElement("span");
-  name.className = "champion__name";
-  name.textContent = champion.name;
-
   portrait.append(image, shade, check);
-  button.append(portrait, name);
+  button.append(portrait);
   return button;
 }
 
@@ -225,6 +231,25 @@ ui.grid.addEventListener("click", (event) => {
   if (champion) toggleChampion(champion.dataset.championId);
 });
 
+ui.grid.addEventListener("pointermove", (event) => {
+  const champion = event.target.closest(".champion");
+  if (!champion) {
+    ui.championTooltip.hidden = true;
+    return;
+  }
+  ui.championTooltip.textContent = champion.dataset.championName;
+  ui.championTooltip.hidden = false;
+  const bounds = ui.championTooltip.getBoundingClientRect();
+  const left = Math.min(event.clientX, window.innerWidth - bounds.width - 16);
+  const top = Math.min(event.clientY, window.innerHeight - bounds.height - 16);
+  ui.championTooltip.style.left = `${Math.max(0, left)}px`;
+  ui.championTooltip.style.top = `${Math.max(0, top)}px`;
+});
+
+ui.grid.addEventListener("pointerleave", () => {
+  ui.championTooltip.hidden = true;
+});
+
 ui.search.addEventListener("input", (event) => {
   state.query = event.target.value;
   render();
@@ -267,14 +292,14 @@ ui.reset.addEventListener("click", () => {
 
 ui.retry.addEventListener("click", loadChampions);
 
-ui.recordControls.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-record]");
-  if (!button) return;
-  const key = button.dataset.record === "win" ? "wins" : "losses";
-  const delta = Number(button.dataset.delta);
-  state.record[key] = Math.max(0, state.record[key] + delta);
-  saveRecord();
-  renderRecord();
+ui.recordControls.querySelectorAll("[data-record]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const key = button.dataset.record === "win" ? "wins" : "losses";
+    const delta = Number(button.dataset.delta);
+    state.record[key] = Math.max(0, state.record[key] + delta);
+    renderRecord();
+    saveRecord();
+  });
 });
 
 ui.recordReset.addEventListener("click", () => {
