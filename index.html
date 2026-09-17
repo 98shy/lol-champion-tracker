@@ -6,8 +6,8 @@
     <meta name="description" content="리그 오브 레전드 챔피언 사용 현황을 한눈에 기록하는 체크리스트" />
     <title>ARAM LAND | LoL Champion Tracker</title>
     <link rel="preconnect" href="https://ddragon.leagueoflegends.com" />
-    <link rel="stylesheet" href="styles.css?v=4" />
-    <script src="app.js?v=4" defer></script>
+    <link rel="stylesheet" href="styles.css?v=5" />
+    <script src="app.js?v=5" defer></script>
   </head>
   <body>
     <div class="app-shell">
@@ -43,6 +43,22 @@
                 <button type="button" data-record="loss" data-delta="1" aria-label="패배 1회 추가">+</button>
               </div>
               <button id="recordResetButton" class="record-reset" type="button">전적 초기화</button>
+            </div>
+            <div class="settlement">
+              <div class="settlement__stake">
+                <span>판당 별풍선</span>
+                <strong id="stakeCount">100개</strong>
+              </div>
+              <div id="stakeControls" class="stake-controls" aria-label="판당 별풍선 조절">
+                <button type="button" data-stake-delta="-1000" aria-label="판당 별풍선 1000개 줄이기">−1천</button>
+                <button type="button" data-stake-delta="-100" aria-label="판당 별풍선 100개 줄이기">−100</button>
+                <button type="button" data-stake-delta="100" aria-label="판당 별풍선 100개 늘리기">+100</button>
+                <button type="button" data-stake-delta="1000" aria-label="판당 별풍선 1000개 늘리기">+1천</button>
+              </div>
+              <div class="settlement__result">
+                <span>최종 결산</span>
+                <strong id="settlementResult" aria-live="polite">0개</strong>
+              </div>
             </div>
           </section>
         </div>

@@ -35,6 +35,9 @@ const ui = {
   winRate: document.querySelector("#winRate"),
   recordControls: document.querySelector(".record-card__controls"),
   recordReset: document.querySelector("#recordResetButton"),
+  stakeCount: document.querySelector("#stakeCount"),
+  stakeControls: document.querySelector("#stakeControls"),
+  settlementResult: document.querySelector("#settlementResult"),
   championTooltip: document.querySelector("#championTooltip"),
 };
 
@@ -60,12 +63,14 @@ function saveUsed() {
 function readStoredRecord() {
   try {
     const saved = JSON.parse(localStorage.getItem(RECORD_STORAGE_KEY));
+    const storedStake = Number.parseInt(saved?.stake, 10);
     return {
       wins: Math.max(0, Number.parseInt(saved?.wins, 10) || 0),
       losses: Math.max(0, Number.parseInt(saved?.losses, 10) || 0),
+      stake: Number.isFinite(storedStake) ? Math.max(0, Math.round(storedStake / 100) * 100) : 100,
     };
   } catch {
-    return { wins: 0, losses: 0 };
+    return { wins: 0, losses: 0, stake: 100 };
   }
 }
 
@@ -78,16 +83,23 @@ function saveRecord() {
 }
 
 function renderRecord() {
-  const { wins, losses } = state.record;
+  const { wins, losses, stake } = state.record;
   const games = wins + losses;
   const rate = games ? `${Math.round((wins / games) * 100)}%` : "—";
+  const settlement = (wins - losses) * stake;
   ui.winCount.textContent = wins;
   ui.lossCount.textContent = losses;
   ui.winControlCount.textContent = wins;
   ui.lossControlCount.textContent = losses;
   ui.winRate.textContent = rate;
+  ui.stakeCount.textContent = `${stake.toLocaleString("ko-KR")}개`;
+  ui.settlementResult.textContent = `${settlement > 0 ? "+" : ""}${settlement.toLocaleString("ko-KR")}개`;
+  ui.settlementResult.classList.toggle("is-positive", settlement > 0);
+  ui.settlementResult.classList.toggle("is-negative", settlement < 0);
   ui.recordControls.querySelector('[data-record="win"][data-delta="-1"]').disabled = wins === 0;
   ui.recordControls.querySelector('[data-record="loss"][data-delta="-1"]').disabled = losses === 0;
+  ui.stakeControls.querySelector('[data-stake-delta="-100"]').disabled = stake < 100;
+  ui.stakeControls.querySelector('[data-stake-delta="-1000"]').disabled = stake < 1000;
 }
 
 async function getJSON(url) {
@@ -280,10 +292,19 @@ ui.recordControls.querySelectorAll("[data-record]").forEach((button) => {
   });
 });
 
+ui.stakeControls.querySelectorAll("[data-stake-delta]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const delta = Number(button.dataset.stakeDelta);
+    state.record.stake = Math.max(0, state.record.stake + delta);
+    renderRecord();
+    saveRecord();
+  });
+});
+
 ui.recordReset.addEventListener("click", () => {
   if (state.record.wins + state.record.losses === 0) return showToast("초기화할 전적이 없습니다.");
   if (!window.confirm("현재 승패 기록을 모두 초기화할까요?")) return;
-  state.record = { wins: 0, losses: 0 };
+  state.record = { ...state.record, wins: 0, losses: 0 };
   saveRecord();
   renderRecord();
   showToast("승패 기록을 초기화했습니다.");
