@@ -39,7 +39,7 @@ button { color: inherit; }
   isolation: isolate;
   min-height: 154px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(370px, 480px);
+  grid-template-columns: minmax(0, 1fr) minmax(470px, 590px);
   gap: 36px;
   align-items: center;
   overflow: hidden;
@@ -104,8 +104,8 @@ button { color: inherit; }
 .stake-controls button { min-width: 42px; height: 29px; padding: 0 5px; color: #f0ca78; background: rgba(200,150,55,.12); border: 1px solid #8f7138; border-radius: 2px; cursor: pointer; font-size: 10px; font-weight: 700; }
 .stake-controls button:hover { color: #101820; background: var(--gold-bright); }
 .stake-controls button:disabled { color: #687379; background: rgba(255,255,255,.04); border-color: #465159; cursor: default; }
-.settlement__result { min-width: 72px; text-align: right; }
-.settlement__result strong { color: #d9dedf; font: 600 20px/1 "Oswald", sans-serif; }
+.settlement__result { min-width: 92px; text-align: right; }
+.settlement__result strong { color: #d9dedf; font: 600 24px/1 "Oswald", sans-serif; }
 .settlement__result strong.is-positive { color: #7fe0cc; }
 .settlement__result strong.is-negative { color: #ff8e86; }
 
