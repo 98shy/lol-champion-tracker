@@ -2,6 +2,19 @@ const DDRAGON_ROOT = "https://ddragon.leagueoflegends.com";
 const FALLBACK_VERSION = "16.18.1";
 const STORAGE_KEY = "lol-champion-tracker:used-v1";
 const RECORD_STORAGE_KEY = "lol-champion-tracker:record-v1";
+const CHAMPION_ALIASES = {
+  Morgana: ["몰가"],
+  Pantheon: ["빵테"],
+  Renata: ["레나타"],
+  Fiddlesticks: ["피들"],
+  Heimerdinger: ["딩거", "하이머"],
+  DrMundo: ["문도"],
+  MasterYi: ["마이"],
+  MonkeyKing: ["손오공"],
+  Nunu: ["누누"],
+  TahmKench: ["탐켄치"],
+};
+const KOREAN_INITIALS = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
 
 const state = {
   champions: [],
@@ -143,12 +156,43 @@ async function loadChampions() {
   }
 }
 
+function normalizeSearchText(value) {
+  return value.toLocaleLowerCase("ko-KR").replace(/[\s·.'’_-]+/g, "");
+}
+
+function getKoreanInitials(value) {
+  return [...value].map((character) => {
+    const code = character.charCodeAt(0) - 0xac00;
+    return code >= 0 && code <= 11171 ? KOREAN_INITIALS[Math.floor(code / 588)] : character;
+  }).join("");
+}
+
+function isOrderedAbbreviation(query, target) {
+  if (query.length < 2) return false;
+  let queryIndex = 0;
+  for (const character of target) {
+    if (character === query[queryIndex]) queryIndex += 1;
+    if (queryIndex === query.length) return true;
+  }
+  return false;
+}
+
+function matchesChampionSearch(champion, query) {
+  if (!query) return true;
+  const searchableNames = [champion.name, champion.id, ...(CHAMPION_ALIASES[champion.id] ?? [])]
+    .map(normalizeSearchText);
+
+  if (searchableNames.some((name) => name.includes(query))) return true;
+  if (/^[ㄱ-ㅎ]+$/.test(query)) {
+    return searchableNames.some((name) => getKoreanInitials(name).includes(query));
+  }
+  return searchableNames.some((name) => isOrderedAbbreviation(query, name));
+}
+
 function getFilteredChampions() {
-  const normalizedQuery = state.query.trim().toLocaleLowerCase("ko-KR");
+  const normalizedQuery = normalizeSearchText(state.query);
   return state.champions.filter((champion) => {
-    const matchesSearch = !normalizedQuery ||
-      champion.name.toLocaleLowerCase("ko-KR").includes(normalizedQuery) ||
-      champion.id.toLocaleLowerCase("en-US").includes(normalizedQuery);
+    const matchesSearch = matchesChampionSearch(champion, normalizedQuery);
     const matchesRole = state.role === "all" || champion.tags.includes(state.role);
     const isUsed = state.used.has(champion.id);
     const matchesStatus = state.status === "all" ||
