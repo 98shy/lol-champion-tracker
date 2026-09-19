@@ -46,8 +46,8 @@ button { color: inherit; }
   padding: 24px 40px;
   color: #fff;
   background:
-    linear-gradient(110deg, rgba(14, 29, 40, 0.98), rgba(16, 41, 51, 0.91)),
-    linear-gradient(135deg, #142734, #0c141c);
+    linear-gradient(90deg, rgba(8, 20, 31, .78) 0%, rgba(8, 20, 31, .24) 34%, rgba(8, 20, 31, .1) 57%, rgba(8, 20, 31, .62) 100%),
+    url("assets/hero-aram-land.jpg") center center / cover no-repeat;
   border: 1px solid rgba(227, 185, 93, 0.28);
   border-radius: 4px;
   box-shadow: var(--shadow);
@@ -66,13 +66,13 @@ button { color: inherit; }
 .hero::after { width: 220px; height: 220px; left: -145px; bottom: -175px; }
 
 .hero h1 { margin: 0 0 8px; color: var(--gold-bright); font: 600 clamp(30px, 3.4vw, 44px)/1.08 "Oswald", sans-serif; letter-spacing: .16em; }
-.hero__brand p { margin: 0; color: #b9c2c6; font-size: 13px; }
+.hero__brand p { margin: 0; color: #e2e8ea; text-shadow: 0 1px 4px rgba(0,0,0,.7); font-size: 13px; }
 .hero__dashboard { min-width: 0; }
 
 .record-card {
   padding: 14px 18px;
   border: 1px solid rgba(221, 185, 111, 0.24);
-  background: rgba(255, 255, 255, 0.055);
+  background: rgba(7, 24, 36, .78);
   backdrop-filter: blur(10px);
 }
 .record-card__summary { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
@@ -254,6 +254,7 @@ footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 3
 @media (max-width: 760px) {
   .app-shell { padding: 14px 14px 16px; }
   .hero { grid-template-columns: 1fr; gap: 18px; padding: 24px 22px; }
+  .hero { background-position: 48% center; }
   .hero h1 { font-size: 30px; }
   .toolbar { top: 0; margin: 14px 0; padding: 13px; }
   .toolbar__bottom { align-items: flex-start; }
