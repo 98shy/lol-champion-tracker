@@ -65,7 +65,7 @@ button { color: inherit; }
 .hero::before { width: 360px; height: 360px; right: 30%; top: -285px; }
 .hero::after { width: 220px; height: 220px; left: -145px; bottom: -175px; }
 
-.hero h1 { margin: 0 0 8px; color: var(--gold-bright); font: 600 clamp(30px, 3.4vw, 44px)/1.08 "Oswald", sans-serif; letter-spacing: .16em; }
+.hero h1 { margin: 0 0 8px; color: var(--gold-bright); font-family: "Noto Sans KR", sans-serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; line-height: 1.08; letter-spacing: -.035em; }
 .hero__brand p { margin: 0; color: #e2e8ea; text-shadow: 0 1px 4px rgba(0,0,0,.7); font-size: 13px; }
 .hero__dashboard { min-width: 0; }
 
