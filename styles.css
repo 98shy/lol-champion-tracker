@@ -47,7 +47,7 @@ button { color: inherit; }
   color: #fff;
   background:
     linear-gradient(90deg, rgba(8, 20, 31, .78) 0%, rgba(8, 20, 31, .24) 34%, rgba(8, 20, 31, .1) 57%, rgba(8, 20, 31, .62) 100%),
-    url("assets/hero-aram-land-v3.jpg") center center / cover no-repeat;
+    url("assets/hero-aram-land-v3.jpg") center 70% / cover no-repeat;
   border: 1px solid rgba(227, 185, 93, 0.28);
   border-radius: 4px;
   box-shadow: var(--shadow);
